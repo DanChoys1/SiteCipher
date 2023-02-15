@@ -1,0 +1,22 @@
+#topmenu li
+{
+    display: inline-block;
+}
+
+img
+{
+    width: 50%;
+    height: 50%;
+}
+
+textarea
+{
+    width: 45%;
+    height: 100px;
+    resize: none;
+}
+
+footer
+{
+    vertical-align: bottom;
+}
