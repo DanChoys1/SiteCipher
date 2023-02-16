@@ -1,22 +1,35 @@
+body {
+    margin: 0;
+    min-width: 930px;
+}
+
+header
+{
+    background: #27a7d6;
+}
+
+img.logo
+{
+    display: inline-block;
+    width: 150px;
+}
+
+#topmenu
+{
+    margin: 0;
+    display: inline-block;
+    font-size: 50px;
+}
+
 #topmenu li
 {
+    margin: 0;
     display: inline-block;
 }
 
-img
-{
-    width: 50%;
-    height: 50%;
-}
-
-textarea
+.chipher-text
 {
     width: 45%;
     height: 100px;
     resize: none;
-}
-
-footer
-{
-    vertical-align: bottom;
 }
