@@ -6,27 +6,76 @@
     <title>Заголовок страницы</title>
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
-    <header>
-        <nav>
-            <img src="logo-yellow-white-1024x512.jpg" alt="Шифр" class="logo">
-            <ul id="topmenu">
-                <li><a href="1.html">Шифр 1</a></li>
-                <li><a href="2.html">Шифр 2</a></li>
-                <li><a href="3.html">Шифр 3</a></li>
-            </ul>
-        </nav>
-    </header>
-    <article>
-        <h2>Шифр 1</h2>
-        <p>Введите то, да сё.</p>
-        <!-- <img src="Cipher-Disk-ppcorn.jpg"ь alt="Шифр"> -->
-        <p><textarea class="chipher-text" onfocus="this.value=''"> input </textarea>
-            <textarea class="chipher-text" readonly> output </textarea></p>
-            <p><input type="text" size="40" onfocus="this.value=''" value="key"></p>
-    </article>
+    <div id="main">
+        <header>
+            <nav>
+                <img id="logo" src="logo-yellow-white-1024x512.jpg" alt="Шифр">
+                <ul id="topmenu">
+                    <li><a href="1.html">DES</a></li>
+                    <li><a href="2.html">ГОСТ2042-23</a></li>
+                    <li><a href="3.html">AUR</a></li>
+                    <li><a href="4.html">SOME MORE</a></li>
+                </ul>
+            </nav>
+        </header>
+        <div id="wrapper">
+            <h2>DES</h2>
+            <table width="100%">
+                <tr>
+                    <th align="left">Исходный текст</th>
+                    <th></th>
+                    <th align="left">Зашифрованный текст</th>
+                </tr>
+                <tr>
+                    <td><textarea></textarea></td>
+                    <td align="center"><button>&#60&#62</button></td>
+                    <td><textarea readonly></textarea></td>
+                </tr>
+                <tr>
+                    <th align="left">Ключ</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="text" size="40">
+                        <button>Сгенерировать</button>
+                    </td>
+                    <td></td>
+                    <td align="right">
+                        <button>Кодировать</button>
+                        <button>Декодировать</button>
+                    </td>
+                </tr>
+            </table>
+            <article>
+                <table width="100%">
+                    <tr>
+                        <th align="left">
+                            <h3>Алгоритм</h3>
+                        </th>
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td><img src="e5eebcd1e4b6f5c171e8051cd5967969.gif" alt="Шифр"></td>
+                        <td>
+                            <ol>
+                                <li>Каждый блок разбивается на два «подблока» (левый и правый, соотвественно).</li>
+                                <li>Исходное заполнение правого блока записывается в левый блок на выходе.</li>
+                                <li>Над правым блоком производится криптографическое преобразование с применением ключевых данных.</li>
+                                <li>Левый (исходный) и правый (преобразованный) блоки складываются по модулю 2 в сумматоре по модулю 2.</li>
+                                <li>Так повторяется несколько раз.</li>
+                            </ol>
+                        </td>
+                    </tr>
+                </table>
+            </article>
+        </div>
+    </div>
     <footer>
-        <p>Что то очень интересное</p>
+        <p>Copyright © 2023, Азаров Даниил</p>
     </footer>
 </body>
 
