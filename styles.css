@@ -51,6 +51,7 @@ header>nav
 {
     display: grid;
     grid-template-columns: 1fr 70px 1fr;
+    grid-template-rows: 1fr 10fr 1fr 1fr;
     align-items: center;
 }
 
@@ -59,25 +60,21 @@ header>nav
     text-align-last: center;
 }
 
+.box8
+{
+    /* grid-column: 3; */
+    /* grid-row: 3 / 4; */
+}
+
 h4
 {
     margin: 0px;
 }
 
-.whith-header
-{
-    margin-top: 0px;
-}
-    
-/* .align-left-button
-{
-    display: flex;
-    vertical-align: left;
-} */
-
 textarea
 {
-    height: 300px;
+    /* height: 300px; */
+    height: 100%;
     width: 100%;
     resize: none;
 }
