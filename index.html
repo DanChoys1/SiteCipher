@@ -23,46 +23,38 @@
         <div id="page">
             <h2>DES</h2>
             <div class="wrapper">
-                    <div class="box1">Исходный текст</div>
+                    <div>Исходный текст</div>
                     <div></div>
-                    <div class="box2">Зашифрованный текст</div>
-                    <div class="box3"><textarea></textarea></div>
-                    <div class="box4"><button>&#60&#62</button></div>
-                    <div class="box5"><textarea readonly></textarea></div>
-                    <div class="box6">Ключ</div>
+                    <div>Зашифрованный текст</div>
+                    <div class="text_box"><textarea></textarea></div>
+                    <div class="swap_box"><button type="submit">&#60&#62</button></div>
+                    <div class="text_box"><textarea readonly></textarea></div>
+                    <div>
+                        Ключ
+                        <div class="ciph_btns_box">
+                            <button type="submit">Кодировать</button>
+                            <button type="submit">Декодировать</button>
+                        </div>
+                    </div>
                     <div></div>
                     <div></div>
-                    <div class="box7">
+                    <div>
                         <input type="text" size="40">
-                        <button>Сгенерировать</button>
+                        <button type="submit">Сгенерировать</button>
                     </div>
                     <div></div>
-                    <div class="box8">
-                        <button>Кодировать</button>
-                        <button>Декодировать</button>
-                    </div>
             </div>
             <article>
-                <table width="100%">
-                    <tr>
-                        <th align="left">
-                            <h3>Алгоритм</h3>
-                        </th>
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td><img src="e5eebcd1e4b6f5c171e8051cd5967969.gif" alt="Шифр"></td>
-                        <td>
-                            <!-- <ol>
-                                <li>Каждый блок разбивается на два «подблока» (левый и правый, соотвественно).</li>
-                                <li>Исходное заполнение правого блока записывается в левый блок на выходе.</li>
-                                <li>Над правым блоком производится криптографическое преобразование с применением ключевых данных.</li>
-                                <li>Левый (исходный) и правый (преобразованный) блоки складываются по модулю 2 в сумматоре по модулю 2.</li>
-                                <li>Так повторяется несколько раз.</li>
-                            </ol> -->
-                        </td>
-                    </tr>
-                </table>
+                <h3>Алгоритм</h3><br>
+                <img src="e5eebcd1e4b6f5c171e8051cd5967969.gif" alt="Шифр">
+                <ol>
+                    <li>Каждый блок разбивается на два «подблока» (левый и правый, соотвественно).</li>
+                    <li>Исходное заполнение правого блока записывается в левый блок на выходе.</li>
+                    <li>Над правым блоком производится криптографическое преобразование с применением ключевых данных.</li>
+                    <li>Левый (исходный) и правый (преобразованный) блоки складываются по модулю 2 в сумматоре по модулю 2.</li>
+                    <li>Так повторяется несколько раз.</li>
+                </ol>
+                <div class="clear_floating"></div>
             </article>
         </div>
     </div>

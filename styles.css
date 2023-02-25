@@ -1,85 +1,84 @@
-body 
-{
-    margin-left: 20%;
-    margin-right: 20%;
-    background-color: #111F24;
+body {
+  margin-left: 20%;
+  margin-right: 20%;
+  background-color: #111f24;
 }
 
-#main
-{
-    min-width: max-content;
+#main {
+  min-width: max-content;
 }
 
-header>nav
-{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
+header > nav {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 
-#logo
-{
-    display: inline-block;
-    width: 200px;
+#logo {
+  display: inline-block;
+  width: 200px;
 }
 
-#topmenu li
-{
-    /* height: 60px; */
-    margin: 10px;
-    /* background-color: #23353b; */
-    display: inline-block;
+#topmenu li {
+  margin: 10px;
+  display: inline-block;
 }
 
-#topmenu a
-{
-    /* padding: 50%; */
-    text-decoration: none;
-    color: #FAFDFF;
-    /* font-family: Verdana, Geneva, Tahoma, sans-serif;   */
-    font-size: 30px;
+#topmenu a {
+  text-decoration: none;
+  color: #fafdff;
+  font-size: 30px;
 }
 
-#page
-{
-    background-color: white;
-    padding: 20px;
-    margin-top: 0px;
+#page {
+  background-color: white;
+  padding: 20px;
+  margin-top: 0px;
+}
+.ciph_btns_box {
+  margin-top: -25px;
+  float: right;
+}
+.wrapper {
+  display: grid;
+  grid-template-columns: 1fr 70px 1fr;
+  grid-template-rows: 1fr 10fr 1fr 1fr;
+  align-items: center;
 }
 
-.wrapper
-{
-    display: grid;
-    grid-template-columns: 1fr 70px 1fr;
-    grid-template-rows: 1fr 10fr 1fr 1fr;
-    align-items: center;
+.swap_box {
+  text-align-last: center;
 }
 
-.box4
-{
-    text-align-last: center;
+.text_box {
+  height: 100%;
+  width: 100%;
 }
 
-.box8
-{
-    /* grid-column: 3; */
-    /* grid-row: 3 / 4; */
+textarea {
+  height: 100%;
+  width: 100%;
+  resize: none;
 }
 
-h4
-{
-    margin: 0px;
+.ciph_box {
+  /* float: left; */
+  /* position: relative; */
+  margin-top: -30px;
+  /* grid-column: 3; */
+  /* grid-row: 3 / 4; */
 }
 
-textarea
+img
 {
-    /* height: 300px; */
-    height: 100%;
-    width: 100%;
-    resize: none;
+  float: left;
 }
 
-footer
+.clear_floating
 {
-    color: #FAFDFF;
+  clear: both;
+}
+
+footer {
+  color: #fafdff;
 }
