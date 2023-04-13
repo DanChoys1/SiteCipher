@@ -69,6 +69,7 @@ header > nav {
   margin-right: 5px;
   float: right;
 }
+
 .wrapper {
   display: grid;
   grid-template-columns: 1fr 1fr;

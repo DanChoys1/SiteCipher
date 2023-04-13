@@ -15,6 +15,10 @@ function init()
 
     let keyTextBox = document.getElementById("key_box")
     // keyTextBox.setCustomValidity("Что-то не правильно")
+
+    // Кодирование
+    let cipherBtn = document.getElementById("ciph_btn")
+    cipherBtn.addEventListener("click", ciphText)
 }
 
 function changeCipherType(name)
@@ -49,4 +53,22 @@ function generateKey()
     }
 
     return Math.random().toString(36).slice(count)
+}
+
+function ciphText()
+{
+    let user = 
+    {
+        name: 'John',
+        surname: 'Smith'
+    };
+
+    fetch("/", 
+    {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json;charset=utf-8' },
+        body: JSON.stringify(user)
+    })
+    .then(response => response.text())
+    .then(commits => console.log(commits));
 }

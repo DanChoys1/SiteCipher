@@ -22,25 +22,23 @@
         </header>
         <div id="page">
             <h2 id="cipher_name">DES</h2>
-            <form method="post">
-                <div class="wrapper">
-                    <div>Исходный текст</div>
-                    <div>Преобразованный текст</div>
-                    <div class="text_box"><textarea name="in_text"></textarea></div>
-                    <div class="text_box"><textarea name="out_text" readonly></textarea></div>
-                    <div id="ciph_btns_box">
-                        <button id="ciph_btn" type="submit">Кодировать</button>
-                        <button id="deciph_btn" type="submit">Декодировать</button>
-                    </div>
-                    <div></div>
-                    <div>
-                        <!-- pattern="#[0-9A-Fa-f]{6}" -->
-                        <input type="text" size="40" id="key_box" name="key" placeholder="Ключ" autocomplete="off" required>
-                        <button type="button" id="generate_key">Сгенерировать</button>
-                    </div>
-                    <div></div>
+            <div class="wrapper">
+                <div>Исходный текст</div>
+                <div>Преобразованный текст</div>
+                <div class="text_box"><textarea name="in_text"></textarea></div>
+                <div class="text_box"><textarea name="out_text" readonly></textarea></div>
+                <div id="ciph_btns_box">
+                    <button id="ciph_btn" type="button">Кодировать</button>
+                    <button id="deciph_btn" type="button">Декодировать</button>
                 </div>
-            </form>
+                <div></div>
+                <div>
+                    <!-- pattern="#[0-9A-Fa-f]{6}" -->
+                    <input type="text" size="40" id="key_box" name="key" placeholder="Ключ" autocomplete="off" required>
+                    <button type="button" id="generate_key">Сгенерировать</button>
+                </div>
+                <div></div>
+            </div>
             <article>
                 <h3>Алгоритм</h3><br>
                 <div id="DES-alghoritm" class="show">
