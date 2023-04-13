@@ -3,58 +3,64 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Заголовок страницы</title>
+    <title>Ciphers</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="script.js">script.js</script>
 </head>
-
 <body>
     <div id="main">
         <header>
             <nav>
-                <img id="logo" src="logo-yellow-white-1024x512.jpg" alt="Шифр">
+                <img id="logo" src="src/logo.jpg" alt="Шифр">
                 <ul id="topmenu">
-                    <li><a href="1.html">DES</a></li>
-                    <li><a href="2.html">ГОСТ2042-23</a></li>
-                    <li><a href="3.html">AUR</a></li>
-                    <li><a href="4.html">SOME MORE</a></li>
+                    <li>DES</li>
+                    <li>ГОСТ2042-23</li>
+                    <li>AUR</li>
+                    <li>SOME MORE</li>
                 </ul>
             </nav>
         </header>
         <div id="page">
-            <h2>DES</h2>
-            <div class="wrapper">
+            <h2 id="cipher_name">DES</h2>
+            <form method="post">
+                <div class="wrapper">
                     <div>Исходный текст</div>
-                    <div></div>
-                    <div>Зашифрованный текст</div>
-                    <div class="text_box"><textarea></textarea></div>
-                    <div class="swap_box"><button type="submit">&#60&#62</button></div>
-                    <div class="text_box"><textarea readonly></textarea></div>
-                    <div>
-                        Ключ
-                        <div class="ciph_btns_box">
-                            <button type="submit">Кодировать</button>
-                            <button type="submit">Декодировать</button>
-                        </div>
+                    <div>Преобразованный текст</div>
+                    <div class="text_box"><textarea name="in_text"></textarea></div>
+                    <div class="text_box"><textarea name="out_text" readonly></textarea></div>
+                    <div id="ciph_btns_box">
+                        <button id="ciph_btn" type="submit">Кодировать</button>
+                        <button id="deciph_btn" type="submit">Декодировать</button>
                     </div>
                     <div></div>
-                    <div></div>
                     <div>
-                        <input type="text" size="40">
-                        <button type="submit">Сгенерировать</button>
+                        <!-- pattern="#[0-9A-Fa-f]{6}" -->
+                        <input type="text" size="40" id="key_box" name="key" placeholder="Ключ" autocomplete="off" required>
+                        <button type="button" id="generate_key">Сгенерировать</button>
                     </div>
                     <div></div>
-            </div>
+                </div>
+            </form>
             <article>
                 <h3>Алгоритм</h3><br>
-                <img src="e5eebcd1e4b6f5c171e8051cd5967969.gif" alt="Шифр">
-                <ol>
-                    <li>Каждый блок разбивается на два «подблока» (левый и правый, соотвественно).</li>
-                    <li>Исходное заполнение правого блока записывается в левый блок на выходе.</li>
-                    <li>Над правым блоком производится криптографическое преобразование с применением ключевых данных.</li>
-                    <li>Левый (исходный) и правый (преобразованный) блоки складываются по модулю 2 в сумматоре по модулю 2.</li>
-                    <li>Так повторяется несколько раз.</li>
-                </ol>
-                <div class="clear_floating"></div>
+                <div id="DES-alghoritm" class="show">
+                    <img src="src/ghost-alghoritm.gif" alt="Шифр">
+                    <ol>
+                        <li>Каждый блок разбивается на два «подблока» (левый и правый, соотвественно).</li>
+                        <li>Исходное заполнение правого блока записывается в левый блок на выходе.</li>
+                        <li>Над правым блоком производится криптографическое преобразование с применением ключевых данных.</li>
+                        <li>Левый (исходный) и правый (преобразованный) блоки складываются по модулю 2 в сумматоре по модулю 2.</li>
+                        <li>Так повторяется несколько раз.</li>
+                    </ol>
+                    <div class="clear_floating"></div>
+                </div>
+                <div id="AUR-alghoritm" class="hide">
+                    <img src="src/ghost-alghoritm.gif" alt="Шифр">
+                    <ol>
+                        <li>Aur</li>
+                    </ol>
+                    <div class="clear_floating"></div>
+                </div>
             </article>
         </div>
     </div>
@@ -62,5 +68,4 @@
         <p>Copyright © 2023, Азаров Даниил</p>
     </footer>
 </body>
-
 </html>
