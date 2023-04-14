@@ -13,7 +13,7 @@ function init()
     let generateKeyBtn = document.getElementById("generate_key")
     generateKeyBtn.addEventListener("click", setGenerateKeyOnTexBox)
 
-    let keyTextBox = document.getElementById("key_box")
+    // let keyTextBox = document.getElementById("key_box")
     // keyTextBox.setCustomValidity("Что-то не правильно")
 
     // Кодирование
@@ -57,18 +57,24 @@ function generateKey()
 
 function ciphText()
 {
-    let user = 
+    let inText   = document.getElementById("in_text")
+    let outText  = document.getElementById("out_text")
+    let keyText  = document.getElementById("key_box")
+    let typeCiph = document.getElementById("cipher_name")
+
+    let req = 
     {
-        name: 'John',
-        surname: 'Smith'
+        type: typeCiph.textContent,
+        text: inText.value,
+        key:  keyText.value
+
     };
 
-    fetch("/", 
+    fetch("/",
     {
-        method: 'POST',
+        method:  'POST',
         headers: { 'Content-Type': 'application/json;charset=utf-8' },
-        body: JSON.stringify(user)
+        body:    JSON.stringify(req)
     })
-    .then(response => response.text())
-    .then(commits => console.log(commits));
+    .then(res => outText.value = res.text());
 }
