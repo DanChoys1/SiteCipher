@@ -35,9 +35,9 @@ button:active {
   background-color: #FFF;
 }
 
-#main {
-  min-width: max-content;
-}
+/* #main { */
+  /* min-width: max-content; */
+/* } */
 
 header > nav {
   display: flex;
@@ -50,7 +50,8 @@ header > nav {
   width: 200px;
 }
 
-#topmenu li {
+#topmenu li 
+{
   margin: 10px;
   display: inline-block;
   text-decoration: none;
@@ -58,19 +59,22 @@ header > nav {
   font-size: 30px;
 }
 
-#page {
+#page 
+{
   background-color: white;
   padding: 20px;
   margin-top: 0px;
 }
 
-#ciph_btns_box {
+#ciph_btns_box 
+{
   margin-top: -30px;
   margin-right: 5px;
   float: right;
 }
 
-.wrapper {
+.wrapper 
+{
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr 15fr;
@@ -78,24 +82,28 @@ header > nav {
   gap:5px 20px;
 }
 
-.text_box {
+.text_box 
+{
   height: 100%;
   width: 100%;
 }
 
-textarea {
+textarea
+{
   height: 100%;
   width: 100%;
   resize: none;
 }
 
-.ciph_box {
+.ciph_box 
+{
   margin-top: -30px;
 }
 
 img
 {
   float: left;
+  margin: 20px;
 }
 
 .clear_floating
@@ -103,7 +111,8 @@ img
   clear: both;
 }
 
-footer {
+footer 
+{
   color: #fafdff;
 }
 

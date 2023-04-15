@@ -18,7 +18,10 @@ function init()
 
     // Кодирование
     let cipherBtn = document.getElementById("ciph_btn")
-    cipherBtn.addEventListener("click", ciphText)
+    cipherBtn.addEventListener("click", _ => ciphText(false))
+    
+    let decipherBtn = document.getElementById("deciph_btn")
+    decipherBtn.addEventListener("click", _ => ciphText(true))
 }
 
 function changeCipherType(name)
@@ -40,41 +43,78 @@ function setGenerateKeyOnTexBox()
 
 function generateKey()
 {
-    let shownAlghoritm = document.getElementsByClassName("show")[0].id
-    let count = 0
-    switch (shownAlghoritm)
+    let shownAlghoritm = document.getElementById("cipher_name").textContent
+    let count = getAlgoKeyLenght(shownAlghoritm)
+    
+    let min = Math.pow(10, 16);
+    let max = Math.pow(10, 17)
+    let val = "";
+    for(let i = 0; i < 10; ++i)
     {
-        case "DES-alghoritm":
-            count = 5
+        val += Math.floor(Math.random() * (max - min) + min).toString(36)
+    }
+    
+    return val.slice(-count)
+}
+
+function getAlgoKeyLenght(name)
+{
+    let count = 0;
+    switch (name)
+    {
+        case "AES":
+            count = 128 //128/192/256 бит
             break
-        case "AUR-alghoritm":
-            count = 10
+        case "BLOWFISH":
+            count = 32 //от 32 до 448 бит
+            break
+        case "CAST":
+            count = 64 //40-128 бит
+            break
+        case "DES":
+            count = 64 //56 бит + 8 проверочных бит
             break
     }
 
-    return Math.random().toString(36).slice(count)
+    let v = count / 8
+    return count/8
 }
 
-function ciphText()
+function ciphText(isDecipher)
 {
-    let inText   = document.getElementById("in_text")
-    let outText  = document.getElementById("out_text")
+    console.log(isDecipher)
     let keyText  = document.getElementById("key_box")
-    let typeCiph = document.getElementById("cipher_name")
+    let typeCiph = document.getElementById("cipher_name").textContent
+    
+    if (!checkKeyValidity(keyText.value, typeCiph))
+    {
+        keyText.setCustomValidity(`Ключ должен содержать ${getAlgoKeyLenght(typeCiph)} символов`);
+        keyText.reportValidity()
+        return
+    } 
+
+    let inText   = document.getElementById("in_text").value
+    let outText  = document.getElementById("out_text")
 
     let req = 
     {
-        type: typeCiph.textContent,
-        text: inText.value,
+        isDeciph: isDecipher,
+        type: typeCiph,
+        text: inText,
         key:  keyText.value
-
-    };
-
+    }
+    
     fetch("/",
     {
         method:  'POST',
         headers: { 'Content-Type': 'application/json;charset=utf-8' },
         body:    JSON.stringify(req)
     })
-    .then(res => outText.value = res.text());
+    .then(res => res.text())
+    .then(text => outText.textContent = text)
+}
+
+function checkKeyValidity(key, ciphType)
+{
+    return key.length == getAlgoKeyLenght(ciphType)
 }

@@ -8,59 +8,82 @@
     <script src="script.js">script.js</script>
 </head>
 <body>
-    <div id="main">
-        <header>
-            <nav>
-                <img id="logo" src="src/logo.jpg" alt="Шифр">
-                <ul id="topmenu">
-                    <li>DES</li>
-                    <li>ГОСТ2042-23</li>
-                    <li>AUR</li>
-                    <li>SOME MORE</li>
-                </ul>
-            </nav>
-        </header>
-        <div id="page">
-            <h2 id="cipher_name">DES</h2>
-            <div class="wrapper">
-                <div>Исходный текст</div>
-                <div>Преобразованный текст</div>
-                <div class="text_box"><textarea id="in_text"></textarea></div>
-                <div class="text_box"><textarea id="out_text" readonly></textarea></div>
-                <div id="ciph_btns_box">
-                    <button id="ciph_btn" type="button">Кодировать</button>
-                    <button id="deciph_btn" type="button">Декодировать</button>
-                </div>
-                <div></div>
-                <div>
-                    <!-- pattern="#[0-9A-Fa-f]{6}" -->
-                    <input type="text" size="40" id="key_box" placeholder="Ключ" autocomplete="off" required>
-                    <button type="button" id="generate_key">Сгенерировать</button>
-                </div>
-                <div></div>
+    <header>
+        <nav>
+            <img id="logo" src="src/logo.jpg" alt="Шифр">
+            <ul id="topmenu">
+                <li>AES</li>
+                <li>BLOWFISH</li>
+                <li>CAST</li>
+                <li>DES</li>
+            </ul>
+        </nav>
+    </header>
+    <div id="page">
+        <h2 id="cipher_name">DES</h2>
+        <div class="wrapper">
+            <div>Исходный текст</div>
+            <div>Преобразованный текст</div>
+            <div class="text_box"><textarea id="in_text"></textarea></div>
+            <div class="text_box"><textarea id="out_text" readonly></textarea></div>
+            <div id="ciph_btns_box">
+                <button id="ciph_btn" type="button">Кодировать</button>
+                <button id="deciph_btn" type="button">Декодировать</button>
             </div>
-            <article>
-                <h3>Алгоритм</h3><br>
-                <div id="DES-alghoritm" class="show">
-                    <img src="src/ghost-alghoritm.gif" alt="Шифр">
-                    <ol>
-                        <li>Каждый блок разбивается на два «подблока» (левый и правый, соотвественно).</li>
-                        <li>Исходное заполнение правого блока записывается в левый блок на выходе.</li>
-                        <li>Над правым блоком производится криптографическое преобразование с применением ключевых данных.</li>
-                        <li>Левый (исходный) и правый (преобразованный) блоки складываются по модулю 2 в сумматоре по модулю 2.</li>
-                        <li>Так повторяется несколько раз.</li>
-                    </ol>
-                    <div class="clear_floating"></div>
-                </div>
-                <div id="AUR-alghoritm" class="hide">
-                    <img src="src/ghost-alghoritm.gif" alt="Шифр">
-                    <ol>
-                        <li>Aur</li>
-                    </ol>
-                    <div class="clear_floating"></div>
-                </div>
-            </article>
+            <div></div>
+            <div>
+                <input type="text" size="40" id="key_box" placeholder="Ключ" autocomplete="off" required>
+                <button type="button" id="generate_key">Сгенерировать</button>
+            </div>
+            <div></div>
         </div>
+        <article>
+            <h3>Алгоритм</h3>
+            <div id="AES-alghoritm" class="show">
+                <img src="src/aes-alghoritm.jpg" alt="Шифр AES">
+                <ol>
+                    <li>Сообщение разбивается на блоки одинакового размера. При необходимости последний блок дополняется до стандартной длины 128 бит.</li>
+                    <li>Шифрование очередного блока сообщения выполняется с использованием предыдущего зашифрованного блока. 
+                        Для первого блока предыдущего зашифрованного блока не существует, поэтому его шифруют с использованием «вектора инициализации» (<strong>initialization vector</strong>, <strong>IV</strong>).</li>
+                    <li>Вектор инициализации — случайное число. Размер (длина) IV равна размеру блока.</li>
+                    <li>Расшифровка выполняется с использованием тех же ключа k и вектора инициализации IV.</li>
+                </ol>
+                <div class="clear_floating"></div>
+            </div>
+            <div id="BLOWFISH-alghoritm" class="hide">
+                <img src="src/blowfish-alghoritm.png" alt="Шифр BLOWFISH">
+                <ol>
+                    <li>Исходные данные разбиваются на блоки фиксированной длины (как правило кратно степени двойки — 64 бит, 128 бит). В случае если длина блока исходных данных меньше длины разрядности шифра, то блок дополняется каким-либо заранее известным образом.</li>
+                    <li>Блок делится на два равных подблока — «левый» L<sub>0</sub> и «правый» R<sub>0</sub>. В случае 64-битной разрядности — на два блока с длиной 32 бита каждый.</li>
+                    <li>«Левый подблок» L<sub>0</sub> видоизменяется функцией итерации <i>F</i>(L<sub>0</sub>, P<sub>0</sub>) в зависимости от ключа P<sub>0</sub>, после чего он складывается по модулю 2 (XOR) с «правым подблоком» R<sub>0</sub>.</li>
+                    <li>Результат сложения присваивается новому левому подблоку L<sub>1</sub>, который становится левой половиной входных данных для следующего раунда, а «левый подблок» L<sub>0</sub> присваивается без изменений новому правому подблоку R<sub>1</sub>, который становится правой половиной.</li>
+                    <li>Эта операция повторяется n-1 раз, при этом при переходе от одного этапа к другому меняются раундовые ключи (P<sub>0</sub>, P<sub>1</sub>, P<sub>2</sub> и т.д.), где n — количество раундов для используемого алгоритма.</li>
+                </ol>
+                <div class="clear_floating"></div>
+            </div>
+            <div id="CAST-alghoritm" class="hide">
+                <img src="src/cast-alghoritm.webp" alt="Шифр CAST">
+                <ol>
+                    <li>(развертка ключа) составляет 16 пар подключей {Kmi, Kri} полученных из K (см. разделы Пары раундовых ключей и Неидентичные раунды).</li>
+                    <li>(L0, R0) <- (m1. .. m64). (Разделяет текст на левую и правую 32-битные половины L0 = m1 ... m32 и R0 = m33 ... m64).</li>
+                    <li>(16 раундов) for i from 1 to 16, вычислить Li и Ri следующим образом: Li = Ri-1; Ri = Li-1 ^ F(Ri-1,Kmi,Kri), где F определена в разделе «Пары раундовых ключей» (F имеет тип 1, тип 2, тип 3 или, в зависимости от i).</li>
+                    <li>c1 ... c64 <- (R16, L16). (Меняем окончательные блоки местами L16, R16 и объединяем, чтобы сформировать зашифрованный текст.)</li>
+                </ol>
+                <div class="clear_floating"></div>
+            </div>
+            <div id="DES-alghoritm" class="hide">
+                <img src="src/des-alghoritm.png" alt="Шифр DES">
+                <ol>
+                    <li>довести исходное сообщение до такого размера (в битах), чтобы оно нацело делилось на размер блока (sizeOfBlock = 128 бит);</li>
+                    <li>разделить исходное сообщение на блоки;</li>
+                    <li>довести длину ключа до длины половины блока;</li>
+                    <li>перевести ключ в бинарный формат (в нули и единицы);</li>
+                    <li>провести над каждым блоком прямое преобразование сетью Фейстеля в течении 16-ти раундов. После каждого раунда необходимо выполнять циклический сдвиг ключа на заданное количество символов;</li>
+                    <li>соединить все блоки вместе; таким образом получим сообщение, зашифрованное алгоритмом DES.</li>
+                </ol>
+                <div class="clear_floating"></div>
+            </div>
+        </article>
     </div>
     <footer>
         <p>Copyright © 2023, Азаров Даниил</p>
