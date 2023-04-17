@@ -9,7 +9,7 @@ app.use(express.static(__dirname));
 var jParser = bodyParser.json();
 
 const cryptos = [ "aes-128-cbc", "blowfish", "cast", "des" ]  
-const iv = crypto.randomBytes(16);
+const iv = crypto.randomBytes(8);
 
 app.post("/", jParser, function (req, res)
 {   
@@ -31,15 +31,13 @@ app.post("/", jParser, function (req, res)
     if (isDeciph)
     {
         let cipher = crypto.createDecipheriv(type, key, iv);  
-        outText = cipher.update(inText, 'utf8', 'hex') + cipher.final('hex');
+        outText = cipher.update(inText, 'hex', 'utf8') + cipher.final('utf8');
     }
     else
     {
         let cipher = crypto.createCipheriv(type, key, iv);  
-        outText = cipher.update(inText, 'hex', 'utf8') + cipher.final('utf8');
+        outText = cipher.update(inText, 'utf8', 'hex') + cipher.final('hex');
     }
-
-    console.log(outText.toString())
 
     res.writeHead(200, { 'Content-Type': 'text/plain' });
     res.end(outText);
