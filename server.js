@@ -9,7 +9,8 @@ app.use(express.static(__dirname));
 var jParser = bodyParser.json();
 
 const cryptos = [ "aes-128-cbc", "blowfish", "cast", "des" ]  
-const iv = crypto.randomBytes(8);
+const iv8 = crypto.randomBytes(8);
+const iv15 = crypto.randomBytes(16);
 
 app.post("/", jParser, function (req, res)
 {   
@@ -26,6 +27,9 @@ app.post("/", jParser, function (req, res)
             break
         }
     }
+
+    let iv = iv8
+    if(type == "aes-128-cbc") iv = iv16
 
     let outText;
     if (isDeciph)
