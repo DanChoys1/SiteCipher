@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require('body-parser')
 const crypto = require('crypto')
 var pg = require("pg");
+const e = require("express");
 // const { log } = require("console");
 const fs = require('fs').promises;
 
@@ -21,6 +22,7 @@ const port = 5000;
 
 const adminLogin = "admin";
 const adminPass = "admin";
+let isAdminLogined = false;
 
 const cryptos = [ "aes-128-cbc", "blowfish", "cast", "des" ]  
 const iv8 = Buffer.from([0x62, 0x75, 0x66, 0x66, 0x65, 0x72, 0xfa, 0x8a]);
@@ -85,13 +87,57 @@ app.post("/", jParser, function (req, res)
 
 app.get("/admin-login", function (req, res)
 {
-    // console.log("res.body")    
-    fs.readFile(__dirname + "/admin-logging.html")
-    .then(contents => {
+    if (isAdminLogined)
+    {
+        isAdminLogined = false;
+
+        let html = `<!DOCTYPE html>
+        <html lang="ru">
+        <head>
+            <meta charset="utf-8">
+            <title>Ciphers</title>
+        </head>
+        <body>
+            <table>
+            <caption>Частота использования алгоритмов</caption>
+            <tr>
+                <th>Алгоритм</th>
+                <th>Частота</th>
+            </tr>
+            <tr>`;
+
+        for (const type of cryptos)
+        {
+            client.query(`SELECT COUNT(*) FROM ${tableName} WHERE ${algoNameColumn} = '${type}'`)
+            .then((result) => 
+            {
+                if(result.rows[0].count > 0)
+                {
+                    client.query(`SELECT ${freqCountColumn} FROM ${tableName} WHERE ${algoNameColumn} = '${type}'`)
+                    .then((result) =>
+                    {
+                        html += `<td>${type}</td>`;
+                        html += `<td>${result.rows[0].frequency}</td>`;                        
+                    });
+                } 
+            });
+        }
+        
+        html += `</tr></table></body></html>`;
+
         res.setHeader("Content-Type", "text/html");
         res.writeHead(200);
-        res.end(contents);
-    })
+        res.end(html);
+    }
+    else
+    {   
+        fs.readFile(__dirname + "/admin-logging.html")
+        .then(contents => {
+            res.setHeader("Content-Type", "text/html");
+            res.writeHead(200);
+            res.end(contents);
+        })
+    }
 });
 
 app.post("/admin-login", urlencodedParser, function (req, res)
@@ -100,57 +146,55 @@ app.post("/admin-login", urlencodedParser, function (req, res)
     if (req.body.log == adminLogin &&
         req.body.pass == adminPass)
     {
-        req.loggedin = true;
-        path = '/admin';
+        isAdminLogined = true;
+        path = '/admin-login';
     }
 
     res.redirect(path);    
 });
 
-function checkAuth(req, res, next) {
-    if (!req.loggedin) 
-    {
-      res.send('You are not authorized to view this page');
-    } 
-    else 
-    {
-      next();
-    }
-}
+// function checkAuth(req, res, next) {
+//     if (!req.loggedin) 
+//     {
+//       res.send('You are not authorized to view this page');
+//     } 
+//     else 
+//     {
+//       next();
+//     }
+// }
 
-app.get('/admin', checkAuth, function (req, res) 
-{
-    res.send('if you are viewing this page it means you are logged in');
+// app.get('/admin', checkAuth, function (req, res) 
+// {
+//     let html = `<table>
+//         <caption>Частота использования алгоритмов</caption>
+//         <tr>
+//             <th>Алгоритм</th>
+//             <th>Частота</th>
+//         </tr>
+//         <tr>`;
 
-    let html = `<table>
-    <caption>Частота использования алгоритмов</caption>
-      <tr>
-        <th>Алгоритм</th>
-        <th>Частота</th>
-      </tr>
-      <tr>`;
+//     for (const type of cryptos)
+//     {
+//         client.query(`SELECT COUNT(*) FROM ${tableName} WHERE ${algoNameColumn} = '${type}'`)
+//         .then((result) => 
+//         {
+//             if(result.rows[0].count > 0)
+//             {
+//                 client.query(`SELECT ${freqCountColumn} FROM ${tableName} WHERE ${algoNameColumn} = '${type}'`)
+//                 .then((result) =>
+//                 {
+//                     html += `<td>${type}</td>`;
+//                     html += `<td>${result}</td>`;
+//                 });
+//             } 
+//         });
+//     }
 
-    for (const type of cryptos)
-    {
-        client.query(`SELECT COUNT(*) FROM ${tableName} WHERE ${algoNameColumn} = '${type}'`)
-        .then((res) => 
-        {
-            if(res.rows[0].count > 0)
-            {
-                client.query(`SELECT ${freqCountColumn} FROM ${tableName} WHERE ${algoNameColumn} = '${type}'`)
-                .then((res) =>
-                {
-                    html += `<td>${type}</td>`;
-                    html += `<td>${res}</td>`;
-                });
-            } 
-        });
-    }
+//     html += `</tr> </table>`;
 
-    html += `</tr> </table>`;
-
-    res.end(html);
-});
+//     res.end(html);
+// });
 
 app.listen(port, "localhost", () =>
 {
