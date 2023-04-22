@@ -1,24 +1,51 @@
 const express = require("express");
 const bodyParser = require('body-parser')
 const crypto = require('crypto')
-var pg = require("pg")
+var pg = require("pg");
+// const { log } = require("console");
+const fs = require('fs').promises;
 
 //Сайт
 const app = express();
 app.use(express.static(__dirname));
 
-// const urlencodedParser = express.urlencoded({extended: false});
+const urlencodedParser = express.urlencoded({extended: false});
 var jParser = bodyParser.json();
 
-//Шифрование
-const cryptos = [ "aes-128-cbc", "blowfish", "cast", "des" ]  
-const iv8 = crypto.randomBytes(8);
-const iv16 = crypto.randomBytes(16);
-
 //БД
-var client = new pg.Client("postgres://postgres:1@localhost:5432/chipher");
+var client = new pg.Client("postgres://postgres:1@localhost:5432/cipher");
 client.connect();
-client.query("INSERT INTO newtable values('woivgnds;fkjbdkjbnd;jbnd;kjfbndkfj;bnreaovd;k', '123')");
+
+// Settings
+const port = 5000;
+
+const adminLogin = "admin";
+const adminPass = "admin";
+
+const cryptos = [ "aes-128-cbc", "blowfish", "cast", "des" ]  
+const iv8 = Buffer.from([0x62, 0x75, 0x66, 0x66, 0x65, 0x72, 0xfa, 0x8a]);
+const iv16 = Buffer.from([0x1e, 0xd5, 0x83, 0x2c, 0x1f, 0xf0, 0xdc, 0xb0, 0x95, 0xfa, 0xec, 0x7e, 0x8a, 0xfe, 0xc6, 0xb3]);
+
+const tableName = "frequency_algo";
+const algoNameColumn = "algo_name";
+const freqCountColumn = "frequency";
+
+function logCipherCount(type)
+{
+    client.query(`SELECT COUNT(*) FROM ${tableName} WHERE ${algoNameColumn} = '${type}'`)
+    .then((res) => 
+    {
+        if(res.rows[0].count > 0)
+        {
+            client.query(`UPDATE ${tableName} SET ${freqCountColumn} = ${freqCountColumn} + 1 WHERE ${algoNameColumn} = '${type}'`);
+        } 
+        else
+        {
+            client.query(`INSERT INTO ${tableName} values('${type}', '1')`);
+        }
+    })
+    // .finally(_ => client.end());
+}
 
 app.post("/", jParser, function (req, res)
 {   
@@ -32,6 +59,7 @@ app.post("/", jParser, function (req, res)
         if(val.includes(req.body.type.toLowerCase()))
         {
             type = val
+            logCipherCount(type)
             break
         }
     }
@@ -54,8 +82,77 @@ app.post("/", jParser, function (req, res)
     res.writeHead(200, { 'Content-Type': 'text/plain' });
     res.end(outText);
 });
- 
-app.listen(5000, "localhost", () =>
+
+app.get("/admin-login", function (req, res)
 {
-    console.log("listening");
+    // console.log("res.body")    
+    fs.readFile(__dirname + "/admin-logging.html")
+    .then(contents => {
+        res.setHeader("Content-Type", "text/html");
+        res.writeHead(200);
+        res.end(contents);
+    })
+});
+
+app.post("/admin-login", urlencodedParser, function (req, res)
+{
+    let path = '/admin-login';
+    if (req.body.log == adminLogin &&
+        req.body.pass == adminPass)
+    {
+        req.loggedin = true;
+        path = '/admin';
+    }
+
+    res.redirect(path);    
+});
+
+function checkAuth(req, res, next) {
+    if (!req.loggedin) 
+    {
+      res.send('You are not authorized to view this page');
+    } 
+    else 
+    {
+      next();
+    }
+}
+
+app.get('/admin', checkAuth, function (req, res) 
+{
+    res.send('if you are viewing this page it means you are logged in');
+
+    let html = `<table>
+    <caption>Частота использования алгоритмов</caption>
+      <tr>
+        <th>Алгоритм</th>
+        <th>Частота</th>
+      </tr>
+      <tr>`;
+
+    for (const type of cryptos)
+    {
+        client.query(`SELECT COUNT(*) FROM ${tableName} WHERE ${algoNameColumn} = '${type}'`)
+        .then((res) => 
+        {
+            if(res.rows[0].count > 0)
+            {
+                client.query(`SELECT ${freqCountColumn} FROM ${tableName} WHERE ${algoNameColumn} = '${type}'`)
+                .then((res) =>
+                {
+                    html += `<td>${type}</td>`;
+                    html += `<td>${res}</td>`;
+                });
+            } 
+        });
+    }
+
+    html += `</tr> </table>`;
+
+    res.end(html);
+});
+
+app.listen(port, "localhost", () =>
+{
+    console.log(`listening port ${port}`);
 });
