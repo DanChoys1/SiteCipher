@@ -90,44 +90,9 @@ app.get("/admin-login", function (req, res)
     if (isAdminLogined)
     {
         isAdminLogined = false;
-
-        let html = `<!DOCTYPE html>
-        <html lang="ru">
-        <head>
-            <meta charset="utf-8">
-            <title>Ciphers</title>
-        </head>
-        <body>
-            <table>
-            <caption>Частота использования алгоритмов</caption>
-            <tr>
-                <th>Алгоритм</th>
-                <th>Частота</th>
-            </tr>
-            <tr>`;
-
-        for (const type of cryptos)
-        {
-            client.query(`SELECT COUNT(*) FROM ${tableName} WHERE ${algoNameColumn} = '${type}'`)
-            .then((result) => 
-            {
-                if(result.rows[0].count > 0)
-                {
-                    client.query(`SELECT ${freqCountColumn} FROM ${tableName} WHERE ${algoNameColumn} = '${type}'`)
-                    .then((result) =>
-                    {
-                        html += `<td>${type}</td>`;
-                        html += `<td>${result.rows[0].frequency}</td>`;                        
-                    });
-                } 
-            });
-        }
-        
-        html += `</tr></table></body></html>`;
-
         res.setHeader("Content-Type", "text/html");
         res.writeHead(200);
-        res.end(html);
+        endFunc(res);
     }
     else
     {   
@@ -139,6 +104,61 @@ app.get("/admin-login", function (req, res)
         })
     }
 });
+
+async function endFunc(res)
+{
+    let html = `<!DOCTYPE html>
+    <html lang="ru">
+    <head>
+        <meta charset="utf-8">
+        <title>Ciphers</title>
+        <style type="text/css">
+            table, td 
+            {
+                border: 1px solid #333;
+                width: 300px;
+                text-align: center;
+            }
+       </style>
+    </head>
+    <body>
+        <table align="center">
+        <caption>Частота использования алгоритмов</caption>
+        <tr>
+            <th>Алгоритм</th>
+            <th>Частота</th>
+        </tr>
+        <tr>`;
+
+    for (const type of cryptos)
+    {
+        html += await client.query(`SELECT COUNT(*) FROM ${tableName} WHERE ${algoNameColumn} = '${type}'`)
+        .then((result) => 
+        {
+            htmlRes = async (result) =>
+            {
+                if (result.rows[0].count > 0)
+                {
+                    return `<tr><td>${type}</td>` + 
+                        await client.query(`SELECT ${freqCountColumn} FROM ${tableName} WHERE ${algoNameColumn} = '${type}'`)
+                        .then((result) =>
+                        {
+                            return `<td>${result.rows[0].frequency}</td></tr>`;
+                        });
+                }
+
+                return "";
+            }
+            return htmlRes(result);
+        });
+    }
+    
+    html += `</tr></table></body></html>`;
+
+console.log(html);
+
+    res.end(html);
+}
 
 app.post("/admin-login", urlencodedParser, function (req, res)
 {
@@ -152,49 +172,6 @@ app.post("/admin-login", urlencodedParser, function (req, res)
 
     res.redirect(path);    
 });
-
-// function checkAuth(req, res, next) {
-//     if (!req.loggedin) 
-//     {
-//       res.send('You are not authorized to view this page');
-//     } 
-//     else 
-//     {
-//       next();
-//     }
-// }
-
-// app.get('/admin', checkAuth, function (req, res) 
-// {
-//     let html = `<table>
-//         <caption>Частота использования алгоритмов</caption>
-//         <tr>
-//             <th>Алгоритм</th>
-//             <th>Частота</th>
-//         </tr>
-//         <tr>`;
-
-//     for (const type of cryptos)
-//     {
-//         client.query(`SELECT COUNT(*) FROM ${tableName} WHERE ${algoNameColumn} = '${type}'`)
-//         .then((result) => 
-//         {
-//             if(result.rows[0].count > 0)
-//             {
-//                 client.query(`SELECT ${freqCountColumn} FROM ${tableName} WHERE ${algoNameColumn} = '${type}'`)
-//                 .then((result) =>
-//                 {
-//                     html += `<td>${type}</td>`;
-//                     html += `<td>${result}</td>`;
-//                 });
-//             } 
-//         });
-//     }
-
-//     html += `</tr> </table>`;
-
-//     res.end(html);
-// });
 
 app.listen(port, "localhost", () =>
 {
