@@ -5,7 +5,7 @@ var pg = require("pg");
 const e = require("express");
 // const { log } = require("console");
 const fs = require('fs').promises;
-
+//export NODE_OPTIONS=--openssl-legacy-provider//
 //Сайт
 const app = express();
 app.use(express.static(__dirname));
@@ -154,6 +154,8 @@ async function endFunc(res)
     }
     
     html += `</tr></table></body></html>`;
+
+console.log(html);
 
     res.end(html);
 }
