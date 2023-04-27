@@ -155,8 +155,6 @@ async function endFunc(res)
     
     html += `</tr></table></body></html>`;
 
-console.log(html);
-
     res.end(html);
 }
 
