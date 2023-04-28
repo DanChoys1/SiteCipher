@@ -38,7 +38,7 @@ function range(val)
     let i = 1;
     for (let algo in dates)
     {
-        // cells[i].innerText = algo[];
+        cells[i].innerText = dates[algo];
         i+=2;
     }
 
