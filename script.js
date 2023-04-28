@@ -82,7 +82,6 @@ function getAlgoKeyLenght(name)
 
 function ciphText(isDecipher)
 {
-    console.log(isDecipher)
     let keyText  = document.getElementById("key_box")
     let typeCiph = document.getElementById("cipher_name").textContent
     

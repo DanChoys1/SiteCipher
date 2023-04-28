@@ -18,7 +18,7 @@ var client = new pg.Client("postgres://postgres:1@localhost:5432/cipher");
 client.connect();
 
 // Settings
-const port = 5000;
+const port = 3000;
 
 const adminLogin = "admin";
 const adminPass = "admin";
@@ -29,24 +29,17 @@ const iv8 = Buffer.from([0x62, 0x75, 0x66, 0x66, 0x65, 0x72, 0xfa, 0x8a]);
 const iv16 = Buffer.from([0x1e, 0xd5, 0x83, 0x2c, 0x1f, 0xf0, 0xdc, 0xb0, 0x95, 0xfa, 0xec, 0x7e, 0x8a, 0xfe, 0xc6, 0xb3]);
 
 const tableName = "frequency_algo";
-const algoNameColumn = "algo_name";
-const freqCountColumn = "frequency";
+const algoNameColumn = "algo";
+const dateColumn = "date";
 
 function logCipherCount(type)
 {
-    client.query(`SELECT COUNT(*) FROM ${tableName} WHERE ${algoNameColumn} = '${type}'`)
-    .then((res) => 
-    {
-        if(res.rows[0].count > 0)
-        {
-            client.query(`UPDATE ${tableName} SET ${freqCountColumn} = ${freqCountColumn} + 1 WHERE ${algoNameColumn} = '${type}'`);
-        } 
-        else
-        {
-            client.query(`INSERT INTO ${tableName} values('${type}', '1')`);
-        }
-    })
-    // .finally(_ => client.end());
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+
+    client.query(`INSERT INTO ${tableName} values('${type}', '${yyyy + '-' + mm + '-' + dd }')`);
 }
 
 app.post("/", jParser, function (req, res)
@@ -85,92 +78,64 @@ app.post("/", jParser, function (req, res)
     res.end(outText);
 });
 
-app.get("/admin-login", function (req, res)
+app.get("/admin", function (req, res)
 {
+    let file = "/admin-logging.html";
     if (isAdminLogined)
     {
         isAdminLogined = false;
+        file = "/admin.html"
+    }
+
+    fs.readFile(__dirname + file)
+    .then(contents => {
         res.setHeader("Content-Type", "text/html");
         res.writeHead(200);
-        endFunc(res);
-    }
-    else
-    {   
-        fs.readFile(__dirname + "/admin-logging.html")
-        .then(contents => {
-            res.setHeader("Content-Type", "text/html");
-            res.writeHead(200);
-            res.end(contents);
-        })
-    }
+        res.end(contents);
+    })
 });
 
-async function endFunc(res)
+app.post("/admin-dates", function (req, res)
 {
-    let html = `<!DOCTYPE html>
-    <html lang="ru">
-    <head>
-        <meta charset="utf-8">
-        <title>Ciphers</title>
-        <style type="text/css">
-            table, td 
-            {
-                border: 1px solid #333;
-                width: 300px;
-                text-align: center;
-            }
-       </style>
-    </head>
-    <body>
-        <table align="center">
-        <caption>Частота использования алгоритмов</caption>
-        <tr>
-            <th>Алгоритм</th>
-            <th>Частота</th>
-        </tr>
-        <tr>`;
+    dates(res)
+});
 
+async function dates(res)
+{
+    let arr = {};
+    let i = 0;
     for (const type of cryptos)
     {
-        html += await client.query(`SELECT COUNT(*) FROM ${tableName} WHERE ${algoNameColumn} = '${type}'`)
+        arr[type] = {};
+        arr[type][0] = await client.query(`SELECT COUNT(*) FROM ${tableName} 
+                WHERE ${algoNameColumn} = '${type}' AND (now() - interval '7 day') < ${dateColumn}`)
         .then((result) => 
         {
-            htmlRes = async (result) =>
-            {
-                if (result.rows[0].count > 0)
-                {
-                    return `<tr><td>${type}</td>` + 
-                        await client.query(`SELECT ${freqCountColumn} FROM ${tableName} WHERE ${algoNameColumn} = '${type}'`)
-                        .then((result) =>
-                        {
-                            return `<td>${result.rows[0].frequency}</td></tr>`;
-                        });
-                }
-
-                return "";
-            }
-            return htmlRes(result);
+            return result.rows[0].count;
+        });
+        arr[type][1] = await client.query(`SELECT COUNT(*) FROM ${tableName} 
+                WHERE ${algoNameColumn} = '${type}' AND (now() - interval '31 day') < ${dateColumn}`)
+        .then((result) => 
+        {
+            return result.rows[0].count;
+        });
+        arr[type][2] = await client.query(`SELECT COUNT(*) FROM ${tableName}
+                WHERE ${algoNameColumn} = '${type}' AND (now() - interval '356 day') < ${dateColumn}`)
+        .then((result) => 
+        {
+            return result.rows[0].count;
         });
     }
-    
-    html += `</tr></table></body></html>`;
 
-console.log(html);
-
-    res.end(html);
+    res.setHeader("Content-Type", "application/json;charset=utf-8");
+    res.writeHead(200);
+    res.end(JSON.stringify(arr));
 }
 
-app.post("/admin-login", urlencodedParser, function (req, res)
+app.post("/admin", urlencodedParser, function (req, res)
 {
-    let path = '/admin-login';
-    if (req.body.log == adminLogin &&
-        req.body.pass == adminPass)
-    {
-        isAdminLogined = true;
-        path = '/admin-login';
-    }
-
-    res.redirect(path);    
+    isAdminLogined = req.body.log == adminLogin && req.body.pass == adminPass;
+    res.redirect("/admin");
 });
 
 app.listen(port, "localhost", () =>
