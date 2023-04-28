@@ -10,7 +10,7 @@ async function init()
     initTable();
 
     let changeDateRange = document.getElementById("changeDateRange")
-    changeDateRange.addEventListener("onchange", _ => range(changeDateRange.value))
+    changeDateRange.addEventListener("click", _ => range(changeDateRange.value))
 }
 
 function initTable()
@@ -20,14 +20,12 @@ function initTable()
 
     for (let algo in dates)
     {
-        let newRow = table.insertRow(0);
+        let newRow = table.insertRow(-1);
         let newCell = newRow.insertCell(0);
         newCell.innerHTML=algo;        
         let newCell2 = newRow.insertCell(1);
         newCell2.innerHTML=dates[algo][range.value];
     }
-
-    // document.body.appendChild(t);
 }
 
 function range(val)
@@ -38,11 +36,9 @@ function range(val)
     let i = 1;
     for (let algo in dates)
     {
-        cells[i].innerText = dates[algo];
+        cells[i].innerText = dates[algo][val];
         i+=2;
     }
-
-    // document.body.appendChild(t);dates
 }
 
 async function initDates()
